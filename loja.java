@@ -18,7 +18,7 @@ import java.io.*;
 */
 
 class Sistema_Comercial {
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws Exception{
         Scanner input = new Scanner(System.in);
         File file = new File("src/Code/statusLoja.txt");
         FileWriter fileW = new FileWriter(file);
