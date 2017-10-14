@@ -1,22 +1,36 @@
-import java.util.Scanner;
+
+/*
+*Importando os métodos de entrada,
+*e de manipulação de arquivos
+*/
+
+//---------#---------#-----------
+//*Importação de Métodos
+
+import java.util.*;
 import java.io.*;
 
+/*
+*---------#---------#---------#--------#--------#------////
+*                   #LojaCoding
+* @Daniel Santos, @Nykollas Regis, @João Vitor Silva
+*---------#---------#---------#--------#--------#------////
+*/
 
-class ATIV {
-    public static void main(String[] args) throws IOException, InterruptedException{
+class Sistema_Comercial {
+    public static void main(String[] args) throws IOException{
         Scanner input = new Scanner(System.in);
-        /*
         File file = new File("src/Code/statusLoja.txt");
         FileWriter fileW = new FileWriter(file);
         BufferedWriter filebW = new BufferedWriter(fileW);
         FileReader fileR = new FileReader(file);
         BufferedReader filebR = new BufferedReader(fileR);
-*/
+        
         int opcao = 0;
         
-        System.out.println("######################################");
-        System.out.println("########   Sistema Comercial  ########");
-        System.out.println("######################################");
+        System.out.println("##################################");
+        System.out.println("######   Sistema Comercial  ######");
+        System.out.println("##################################");
 	
         while(opcao != 7)
         {
@@ -33,62 +47,42 @@ class ATIV {
             opcao = input.nextInt();
 		
         switch(opcao){
-            case 1: //("1. Vender um Produto");
-		System.out.println("Aguarde...");
-		Thread.sleep(1000);
-		//os.system("clear")
-		System.out.println("##################################");
-		System.out.println("########  Vender Produto  ########");
-		System.out.println("##################################");
-                
-                System.out.print("Código do Produto: ");
-                int codigo = input.nextInt();
-                break;
-            case 2: //("2. Cadastrar um Produto");
-		System.out.println("Aguarde...");
-		Thread.sleep(1000);
-		//os.system("clear")
-		System.out.println("##################################");
-		System.out.println("######  Cadastrar Produto  #######");
-		System.out.println("##################################");
-                
-            	
-                break;
-            case 3: //("3. Consultar Banco de Dados");
+            case 1:
                 System.out.println("Aguarde...");
-		Thread.sleep(1000);
-		//os.system("clear")
-		System.out.println("##################################");
-		System.out.println("########  Vender Produto  ########");
-		System.out.println("##################################");
+                Thread.sleep(1000);
+                //os.system()
+                System.out.println("###########  Vender Produto  ###########");
+                
                 
                 break;
-            case 4: //("4. Verificar Relatório de Vendas");
+            case 2:
                 System.out.println("Aguarde...");
-		Thread.sleep(1000);
-		//os.system("clear")
-		System.out.println("##################################");
-		System.out.println("########  Vender Produto  ########");
-		System.out.println("##################################");
-                
+                Thread.sleep(1000);
+                System.out.println("##############  Cadastro de Produto  ##############");
             
                 break;
-            case 5: //("5. Verificar Relatório de Reposição");
+            case 3:
                 System.out.println("Aguarde...");
-		Thread.sleep(1000);
-		//os.system("clear")
-		System.out.println("##################################");
-		System.out.println("########  Vender Produto  ########");
-		System.out.println("##################################");
-                
+                Thread.sleep(1000);
+                System.out.println("##############   Banco de Dados  #############");
+            
                 break;
-            case 6: //("6. Status da Loja");
+            case 4:
                 System.out.println("Aguarde...");
-		Thread.sleep(1000);
-		//os.system("clear")
-		System.out.println("##################################");
-		System.out.println("########  Vender Produto  ########");
-		System.out.println("##################################");
+                Thread.sleep(1000);
+                System.out.println("##############  Relatório de Vendas   #############");
+            
+                break;
+            case 5:
+                System.out.println("Aguarde...");
+                Thread.sleep(1000);
+                System.out.println("##############  Relatório de Reposição   #############");
+            
+                break;
+            case 6:
+                System.out.println("Aguarde...");
+                Thread.sleep(1000);
+                System.out.println("##############  Status da Loja   #############");
                 
             
                 break;
@@ -106,25 +100,18 @@ class ATIV {
                 }
                 if(confirm == 's'){
                     System.out.println("Saindo do Sistema...");
-                    Thread.sleep(500);
                     System.out.println("Atualizando o status da loja...");
-                    Thread.sleep(500);
                 }
                 else{
                     System.out.println("Reiniciando Sistema...\n");
-                    Thread.sleep(1000);
                     opcao = 0;
                 }
                 break;
             default:
                 System.out.println("Opção Inválida!!!\n\n");
                 
-            } //End of Switch
-		
+            } //End of Switch	
         } //End of While
-	    
-	    
-	    
     } //End of Main
 } //End of Class
 
