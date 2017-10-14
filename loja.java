@@ -18,6 +18,37 @@ import java.io.*;
 */
 
 class Sistema_Comercial {
+    public static void escreverProduto(int codigo,String titulo,String autor,String descricao,float preco,int estoqueMax,float custoRepo,int estoque) throws Exception{
+        File file = new File("src/database/" + String.valueOf(codigo));
+        FileWriter fileW = new FileWriter(file);
+        BufferedWriter filebW = new BufferedWriter(fileW);
+        
+        filebW.write(titulo + '\n');
+	filebW.write(autor + '\n');
+	filebW.write(descricao + '\n');
+	filebW.write(String.valueOf(preco) + '\n');
+	filebW.write(String.valueOf(estoqueMax) + '\n');
+	filebW.write(String.valueOf(custoRepo) + '\n');
+	filebW.write(String.valueOf(estoque) + '\n');
+	
+	filebW.close();
+    }
+    public static String lerProduto(int codigo) throws IOException{
+        File file = new File("src/database/" + String.valueOf(codigo));
+        FileReader fileR = new FileReader(file);
+        BufferedReader filebR = new BufferedReader(fileR);
+        String listaDeValores[] = new String[7];
+        
+        listaDeValores[0] = filebR.readLine(); //título
+	listaDeValores[1] = filebR.readLine(); //autor
+	listaDeValores[2] = filebR.readLine(); //descricão
+	listaDeValores[3] = filebR.readLine(); //preço
+	listaDeValores[4] = filebR.readLine(); //estoque máximo
+	listaDeValores[5] = filebR.readLine(); //custo de reposição 
+	listaDeValores[7] = filebR.readLine(); //qtd. de estoque
+        
+        return listaDeValores[];
+    }
     public static void main(String[] args) throws Exception{
         Scanner input = new Scanner(System.in);
         File file = new File("src/Code/statusLoja.txt");
