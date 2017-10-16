@@ -33,7 +33,7 @@ class Sistema_Comercial {
 	
 	filebW.close();
     }
-    public static String lerProduto(int codigo) throws IOException{
+    public static String[] lerProduto(int codigo) throws IOException{
         File file = new File("src/database/" + String.valueOf(codigo));
         FileReader fileR = new FileReader(file);
         BufferedReader filebR = new BufferedReader(fileR);
@@ -47,7 +47,7 @@ class Sistema_Comercial {
 	listaDeValores[5] = filebR.readLine(); //custo de reposição 
 	listaDeValores[7] = filebR.readLine(); //qtd. de estoque
         
-        return listaDeValores[];
+        return listaDeValores;
     }
     public static void main(String[] args) throws Exception{
         Scanner input = new Scanner(System.in);
