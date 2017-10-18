@@ -1,3 +1,4 @@
+package Loja;
 
 /*
 *Importando os métodos de entrada,
@@ -6,6 +7,7 @@
 
 //---------#---------#-----------
 //*Importação de Métodos
+//---------#---------#-----------
 
 import java.util.*;
 import java.io.*;
@@ -13,51 +15,55 @@ import java.io.*;
 /*
 *---------#---------#---------#--------#--------#------////
 *                   #LojaCoding
-* @Daniel Santos, @Nykollas Regis, @João Vitor Silva
+*        @Daniel Santos, @Nykollas Regis
 *---------#---------#---------#--------#--------#------////
 */
 
 class Sistema_Comercial {
-    public static void escreverProduto(int codigo,String titulo,String autor,String descricao,float preco,int estoqueMax,float custoRepo,int estoque) throws Exception{
-        File file = new File("src/database/" + String.valueOf(codigo));
-        FileWriter fileW = new FileWriter(file);
-        BufferedWriter filebW = new BufferedWriter(fileW);
+    public static void escreverProduto(int codigo, float preco,int estoqueMax,float custoRepo,int estoque) throws Exception{
+        File file = new File("src/database/produtos" + String.valueOf(codigo));
+        FileWriter fileWriter = new FileWriter(file);
+        BufferedWriter filebuffW = new BufferedWriter(fileWriter);
         
-        filebW.write(titulo + '\n');
-	filebW.write(autor + '\n');
-	filebW.write(descricao + '\n');
-	filebW.write(String.valueOf(preco) + '\n');
-	filebW.write(String.valueOf(estoqueMax) + '\n');
-	filebW.write(String.valueOf(custoRepo) + '\n');
-	filebW.write(String.valueOf(estoque) + '\n');
+	    filebuffW.write(String.valueOf(preco) + '\n');
+	    filebuffW.write(String.valueOf(estoqueMax) + '\n');
+	    filebuffW.write(String.valueOf(custoRepo) + '\n');
+	    filebuffW.write(String.valueOf(estoque) + '\n');
 	
-	filebW.close();
+	    filebuffW.close();
     }
-    public static String[] lerProduto(int codigo) throws IOException{
+
+//-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
+
+    public static int[] lerProduto(int codigo) throws IOException{
         File file = new File("src/database/" + String.valueOf(codigo));
-        FileReader fileR = new FileReader(file);
-        BufferedReader filebR = new BufferedReader(fileR);
-        String listaDeValores[] = new String[7];
+        FileReader fileReader = new FileReader(file);
+        BufferedReader filebuffR = new BufferedReader(fileReader);
+        int listaDeValores[] = new int[4];
         
-        listaDeValores[0] = filebR.readLine(); //título
-	listaDeValores[1] = filebR.readLine(); //autor
-	listaDeValores[2] = filebR.readLine(); //descricão
-	listaDeValores[3] = filebR.readLine(); //preço
-	listaDeValores[4] = filebR.readLine(); //estoque máximo
-	listaDeValores[5] = filebR.readLine(); //custo de reposição 
-	listaDeValores[7] = filebR.readLine(); //qtd. de estoque
+	    listaDeValores[0] = Integer.parseInt(filebuffR.readLine());    //preço
+	    listaDeValores[1] = Integer.parseInt(filebuffR.readLine());    //estoque máximo
+	    listaDeValores[2] = Integer.parseInt(filebuffR.readLine());    //custo de reposição 
+	    listaDeValores[3] = Integer.parseInt(filebuffR.readLine());    //qtd. de estoque
         
-        return listaDeValores;
+        return listaDeValores; 
     }
+
+//-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
+
     public static void main(String[] args) throws Exception{
         Scanner input = new Scanner(System.in);
-        File file = new File("src/Code/statusLoja.txt");
-        FileWriter fileW = new FileWriter(file);
-        BufferedWriter filebW = new BufferedWriter(fileW);
-        FileReader fileR = new FileReader(file);
-        BufferedReader filebR = new BufferedReader(fileR);
+        File file = new File("src//Loja//statusLoja.txt"); //abrindo o statusLoja.txt
         
-        int opcao = 0;
+        FileWriter fileWriter = new FileWriter(file);    BufferedWriter filebuffW = new BufferedWriter(fileWriter);  //variáveis para escrever no arquivo 
+        FileReader fileReader = new FileReader(file);    BufferedReader filebuffR = new BufferedReader(fileReader);  //variáveis para ler o arquivo
+        
+        int opcao = 0; 
+        
+        float lucroTotal   = Float.parseFloat(filebuffR.readLine()); //recebendo lucroTotal
+        float custoTotal   = Float.parseFloat(filebuffR.readLine()); //recebendo custoTotal
+        float receitaTotal = Float.parseFloat(filebuffR.readLine()); //recebendo receitaTotal
+        int qtdProdutos    = Integer.parseInt(filebuffR.readLine()); //recebendo qtdProdutos
         
         System.out.println("##################################");
         System.out.println("######   Sistema Comercial  ######");
@@ -84,6 +90,11 @@ class Sistema_Comercial {
                 //os.system()
                 System.out.println("###########  Vender Produto  ###########");
                 
+                System.out.print("\nCódigo: ");
+                int codigo = input.nextInt();
+                if(codigo > 0 && codigo < qtdProdutos){
+                    int[] listaDados = lerProduto(codigo);
+                }
                 
                 break;
             case 2:
@@ -132,6 +143,14 @@ class Sistema_Comercial {
                 if(confirm == 's'){
                     System.out.println("Saindo do Sistema...");
                     System.out.println("Atualizando o status da loja...");
+                    Thread.sleep(1000);
+                    
+                    filebuffW.write(Float.toString(lucroTotal) + '\n');
+                    filebuffW.write(Float.toString(custoTotal) + '\n');
+                    filebuffW.write(Float.toString(receitaTotal) + '\n');
+                    filebuffW.write(Integer.toString(qtdProdutos) + '\n');
+                    
+                    filebuffW.close();
                 }
                 else{
                     System.out.println("Reiniciando Sistema...\n");
@@ -145,4 +164,3 @@ class Sistema_Comercial {
         } //End of While
     } //End of Main
 } //End of Class
-
