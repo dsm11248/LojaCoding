@@ -1,4 +1,4 @@
-package Loja;
+package Sistema_Comercial;
 
 /*
 *Importando os métodos de entrada,
@@ -19,9 +19,9 @@ import java.io.*;
 *---------#---------#---------#--------#--------#------////
 */
 
-class Sistema_Comercial {
-    public static void escreverProduto(int codigo, float preco,int estoqueMax,float custoRepo,int estoque) throws Exception{
-        File file = new File("src/database/produtos" + String.valueOf(codigo));
+public class LojaCoding {
+	public static void escreverProduto(int codigo, float preco,int estoqueMax,float custoRepo,int estoque) throws Exception{
+        File file = new File("src//Sistema_Comecial//database//produtos" + String.valueOf(codigo));
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter filebuffW = new BufferedWriter(fileWriter);
         
@@ -36,9 +36,10 @@ class Sistema_Comercial {
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
 
     public static int[] lerProduto(int codigo) throws IOException{
-        File file = new File("src/database/" + String.valueOf(codigo));
+        File file = new File("src//Sistema_Comecial//database//produtos" + String.valueOf(codigo));
         FileReader fileReader = new FileReader(file);
         BufferedReader filebuffR = new BufferedReader(fileReader);
+        
         int listaDeValores[] = new int[4];
         
 	    listaDeValores[0] = Integer.parseInt(filebuffR.readLine());    //preço
@@ -53,9 +54,8 @@ class Sistema_Comercial {
 
     public static void main(String[] args) throws Exception{
         Scanner input = new Scanner(System.in);
-        File file = new File("src//Loja//statusLoja.txt"); //abrindo o statusLoja.txt
+        File file = new File("src//Sistema_Comercial//statusLoja.txt"); //abrindo o statusLoja.txt
         
-        FileWriter fileWriter = new FileWriter(file);    BufferedWriter filebuffW = new BufferedWriter(fileWriter);  //variáveis para escrever no arquivo 
         FileReader fileReader = new FileReader(file);    BufferedReader filebuffR = new BufferedReader(fileReader);  //variáveis para ler o arquivo
         
         int opcao = 0; 
@@ -64,6 +64,8 @@ class Sistema_Comercial {
         float custoTotal   = Float.parseFloat(filebuffR.readLine()); //recebendo custoTotal
         float receitaTotal = Float.parseFloat(filebuffR.readLine()); //recebendo receitaTotal
         int qtdProdutos    = Integer.parseInt(filebuffR.readLine()); //recebendo qtdProdutos
+        
+        FileWriter fileWriter = new FileWriter(file);    BufferedWriter filebuffW = new BufferedWriter(fileWriter);  //variáveis para escrever no arquivo    
         
         System.out.println("##################################");
         System.out.println("######   Sistema Comercial  ######");
