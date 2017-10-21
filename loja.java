@@ -19,16 +19,18 @@ import java.io.*;
 *---------#---------#---------#--------#--------#------////
 */
 
+//-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
+
 public class LojaCoding {
 	public static void escreverProduto(int codigo, float preco,int estoqueMax,float custoRepo,int estoque) throws Exception{
         File file = new File("src//Sistema_Comecial//database//produtos" + String.valueOf(codigo));
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter filebuffW = new BufferedWriter(fileWriter);
         
-	    filebuffW.write(String.valueOf(preco) + '\n');
-	    filebuffW.write(String.valueOf(estoqueMax) + '\n');
-	    filebuffW.write(String.valueOf(custoRepo) + '\n');
-	    filebuffW.write(String.valueOf(estoque) + '\n');
+	    filebuffW.write( String.valueOf(preco) + '\n');
+	    filebuffW.write( String.valueOf(estoqueMax) + '\n');
+	    filebuffW.write( String.valueOf(custoRepo) + '\n');
+	    filebuffW.write( String.valueOf(estoque) + '\n');
 	
 	    filebuffW.close();
     }
@@ -56,7 +58,8 @@ public class LojaCoding {
         Scanner input = new Scanner(System.in);
         File file = new File("src//Sistema_Comercial//statusLoja.txt"); //abrindo o statusLoja.txt
         
-        FileReader fileReader = new FileReader(file);    BufferedReader filebuffR = new BufferedReader(fileReader);  //variáveis para ler o arquivo
+      //variáveis para ler o arquivo
+        FileReader fileReader = new FileReader(file);    BufferedReader filebuffR = new BufferedReader(fileReader);
         
         int opcao = 0; 
         
@@ -65,7 +68,7 @@ public class LojaCoding {
         float receitaTotal = Float.parseFloat(filebuffR.readLine()); //recebendo receitaTotal
         int qtdProdutos    = Integer.parseInt(filebuffR.readLine()); //recebendo qtdProdutos
         
-        FileWriter fileWriter = new FileWriter(file);    BufferedWriter filebuffW = new BufferedWriter(fileWriter);  //variáveis para escrever no arquivo    
+        fileReader.close();
         
         System.out.println("##################################");
         System.out.println("######   Sistema Comercial  ######");
@@ -73,7 +76,7 @@ public class LojaCoding {
 	
         while(opcao != 7)
         {
-            System.out.println("Menu");
+            System.out.println("\nMenu");
             System.out.println("1. Vender um Produto");
             System.out.println("2. Cadastrar um Produto");
             System.out.println("3. Consultar Banco de Dados");
@@ -94,9 +97,39 @@ public class LojaCoding {
                 
                 System.out.print("\nCódigo: ");
                 int codigo = input.nextInt();
+                
                 if(codigo > 0 && codigo < qtdProdutos){
-                    int[] listaDados = lerProduto(codigo);
+                	int[] listaDados = lerProduto(codigo);
+                    
+                	float preco = listaDados[0];
+                    int estoqueMax = listaDados[1];
+                    float custoRepo = listaDados[2];
+                    int qtdEstoque = listaDados[3];
+                    
+                    if (qtdEstoque > 0) {
+                    	System.out.print("Quantos produtos deseja comprar: ");
+						int qtdVendProdutos = input.nextInt();
+						
+						if ((qtdVendProdutos > 0) && (qtdVendProdutos <= qtdEstoque)) {
+							lucroTotal += preco * qtdVendProdutos;
+							receitaTotal += preco * qtdVendProdutos;
+							qtdEstoque -= 1;
+							
+							escreverProduto(codigo,preco,estoqueMax,custoRepo,qtdEstoque);
+							
+							System.out.println("\nCompra efetuada com sucesso!");
+						}
+						else {
+							
+						}
+					}
+                    else {
+						System.out.println("Quantidade de estoque insuficiente!");
+					}
                 }
+                else {
+					System.out.println("Produto Inexistente!");
+				}
                 
                 break;
             case 2:
@@ -147,6 +180,9 @@ public class LojaCoding {
                     System.out.println("Atualizando o status da loja...");
                     Thread.sleep(1000);
                     
+                    //variáveis para escrever no arquivo
+                    FileWriter fileWriter = new FileWriter(file);    BufferedWriter filebuffW = new BufferedWriter(fileWriter);    
+                    
                     filebuffW.write(Float.toString(lucroTotal) + '\n');
                     filebuffW.write(Float.toString(custoTotal) + '\n');
                     filebuffW.write(Float.toString(receitaTotal) + '\n');
@@ -166,3 +202,5 @@ public class LojaCoding {
         } //End of While
     } //End of Main
 } //End of Class
+
+
