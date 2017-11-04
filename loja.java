@@ -35,12 +35,13 @@ public class LojaCoding {
 	}
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
 
-    public static void escreverProduto(int codigo, float preco,int estoqueMax,float custoReposicao,int estoque) throws Exception{
+    public static void escreverProduto(int codigo, String produto, float preco,int estoqueMax,float custoReposicao,int estoque) throws Exception{
         File file = new File("src/Sistema_Comercial/database/produtos/" + codigo);
         file.createNewFile();
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter filebuffW = new BufferedWriter(fileWriter);
         
+        filebuffW.write( produto + '\n');
 	    filebuffW.write( String.valueOf(preco) + '\n');
 	    filebuffW.write( String.valueOf(estoqueMax) + '\n');
 	    filebuffW.write( String.valueOf(custoReposicao) + '\n');
@@ -51,27 +52,29 @@ public class LojaCoding {
 
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
 
-    public static float[] lerProduto(int codigo) throws IOException{
+    public static String[] lerProduto(int codigo) throws IOException{
         File file = new File("src/Sistema_Comercial/database/produtos/" + codigo);
         FileReader fileReader = new FileReader(file);
         BufferedReader filebuffR = new BufferedReader(fileReader);
         
-        float listaDeValores[] = new float[4];
+        String[] listaDeValores = new String[5];
         
-	    listaDeValores[0] = Float.parseFloat(filebuffR.readLine());    //preço
-	    listaDeValores[1] = Float.parseFloat(filebuffR.readLine());    //estoque máximo
-	    listaDeValores[2] = Float.parseFloat(filebuffR.readLine());    //custo de reposição 
-	    listaDeValores[3] = Float.parseFloat(filebuffR.readLine());    //qtd. de estoque
+        listaDeValores[0] = filebuffR.readLine();    //produto
+	    listaDeValores[1] = filebuffR.readLine();    //preço
+	    listaDeValores[2] = filebuffR.readLine();    //estoque máximo
+	    listaDeValores[3] = filebuffR.readLine();    //custo de reposição 
+	    listaDeValores[4] = filebuffR.readLine();    //qtd. de estoque
         
-       return listaDeValores; 
+       return listaDeValores;
     }
 
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
     
-    public static void escreverLogVenda(int codigo, float preco,int estoqueMax,float custoReposicao,int estoque) throws Exception{
-    	File file = new File("src/Sistema_Comercial/database/logVenda/" + codigo);
-        FileReader fileReader = new FileReader(file);
-        BufferedReader filebuffR = new BufferedReader(fileReader);
+    public static void escreverLog(int codigo, String caminho, String produto, float preco,int estoqueMax,float custoReposicao,int estoque) throws Exception{
+    	File file = new File("src/Sistema_Comercial/database/" + caminho + "/" + codigo);
+        file.createNewFile();
+        FileWriter fileWriter = new FileWriter(file);
+        BufferedWriter filebuffW = new BufferedWriter(fileWriter);
         
         //variavel para data e hora
     	Calendar calendar = Calendar.getInstance();
@@ -85,8 +88,33 @@ public class LojaCoding {
 		minuto = calendar.get(Calendar.MINUTE);
 		segundo = calendar.get(Calendar.SECOND);
 		
-		
+		filebuffW.write(dia + "/" + mes + "/" + ano);
+		filebuffW.write(hora + ":" + minuto + ":" + segundo);
+		filebuffW.write(produto);
+		filebuffW.write( String.valueOf(preco));
+		filebuffW.write( String.valueOf(estoqueMax));
+		filebuffW.write( String.valueOf(custoReposicao));
+		filebuffW.write( String.valueOf(estoque));
     	
+    }
+    
+//-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
+
+    public static String[] lerLog(int codigo, String caminho) throws Exception{
+    	File file = new File("src/Sistema_Comercial/database/" + caminho + "/" + codigo);
+        FileReader fileReader = new FileReader(file);
+        BufferedReader filebuffR = new BufferedReader(fileReader);
+        
+        String[] listaDeValores = new String[5];
+        
+        listaDeValores[0] = filebuffR.readLine();
+	    listaDeValores[1] = filebuffR.readLine();
+	    listaDeValores[2] = filebuffR.readLine();
+	    listaDeValores[3] = filebuffR.readLine();
+	    listaDeValores[4] = filebuffR.readLine();
+        
+        
+    	return listaDeValores;
     }
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
 
@@ -107,9 +135,10 @@ public class LojaCoding {
         int opcao = 0;       //recebe a opção do menu
         int codigo;          //recebe o código
         char desejo;         //recebe algo para confirmar ('s' ou 'n')
-        float[] listaDeDados;  //recebe o retorno da função (lerProduto)
+        String[] listaDeDados;  //recebe o retorno da função (lerProduto)
         
       //Variáveis para armazenar os dados de um produto
+        String produto;
         float preco;      //preço
         int estoqueMax;   //estoque máximo
         float custoReposicao;  //custo de reposição
@@ -124,6 +153,7 @@ public class LojaCoding {
         float custoTotal   = Float.parseFloat(filebuffR.readLine()); //recebendo custoTotal
         float receitaTotal = Float.parseFloat(filebuffR.readLine()); //recebendo receitaTotal
         int qtdProdutos    = Integer.parseInt(filebuffR.readLine()); //recebendo qtdProdutos
+        int qtdVendas      = Integer.parseInt(filebuffR.readLine()); //recebendo qtdVendas
         
         fileReader.close();
         
@@ -145,7 +175,8 @@ public class LojaCoding {
 	
             System.out.print("\nComando: ");
             opcao = input.nextInt();
-		
+            input.nextLine();
+            
         switch(opcao){
             case 1:
                 System.out.println("Aguarde...");
@@ -158,10 +189,11 @@ public class LojaCoding {
                 if(codigo > 0 && codigo <= qtdProdutos){
                     listaDeDados = lerProduto(codigo);
                     
-                    preco = listaDeDados[0];
-                    estoqueMax = (int) listaDeDados[1];
-                    custoReposicao = listaDeDados[2];
-                    qtdEstoque = (int) listaDeDados[3];
+                    produto = listaDeDados[0];
+                    preco = Float.parseFloat(listaDeDados[1]);
+                    estoqueMax = Integer.parseInt(listaDeDados[2]);
+                    custoReposicao = Float.parseFloat(listaDeDados[3]);
+                    qtdEstoque = Integer.parseInt(listaDeDados[4]);
                     
                     if (qtdEstoque > 0) {
                     	System.out.print("\nQuantos produtos deseja comprar: ");
@@ -170,20 +202,23 @@ public class LojaCoding {
                         if ((qtdVendProdutos > 0) && (qtdVendProdutos <= qtdEstoque)) {
                             lucroTotal += preco * qtdVendProdutos;
                             receitaTotal += preco * qtdVendProdutos;
-                            qtdEstoque -= 1;
+                            qtdEstoque--;
+                            qtdVendas++;
 							
-                            escreverProduto(codigo, preco, estoqueMax, custoReposicao, qtdEstoque);
+                            escreverProduto(codigo, produto, preco, estoqueMax, custoReposicao, qtdEstoque);
 							
-                            System.out.println("Quantidade de produtos vendidos: " + qtdVendProdutos);
+                            System.out.println("\nQuantidade de produtos vendidos: " + qtdVendProdutos);
                             System.out.println("Preço da compra: " + preco*qtdVendProdutos);
                             System.out.println("Quantidade no estoque: " + qtdEstoque);
+                            System.out.println("Quantidade de vendas:" + qtdVendas);
+                            Thread.sleep(4000);
                             
                             System.out.println("\nCompra efetuada com sucesso!");
                             
-                            
+                            //int codigo, String produto, float preco,int estoqueMax,float custoReposicao,int estoque
+                            escreverLogVenda(qtdVendas, produto, preco, estoqueMax, custoReposicao, qtdEstoque);
                             
                             Thread.sleep(1000);
-                            
                         }
                         else {
                             System.out.println("Quantidade de estoque insuficiente!");
@@ -208,6 +243,9 @@ public class LojaCoding {
                 
                 System.out.println("\nCódigo: " + (qtdProdutos+1));
                 
+                System.out.print("Nome do produto: ");
+                produto = input.nextLine();
+                
                 System.out.print("Preço Unitário: R$ ");
                 preco = input.nextFloat();
                 
@@ -225,7 +263,7 @@ public class LojaCoding {
                 if (desejo == 's') {
                     qtdProdutos += 1;
                     //int codigo, float preco,int estoqueMax,float custoReposicao,int estoque
-                    escreverProduto(qtdProdutos, preco, estoqueMax, custoReposicao, 0);
+                    escreverProduto(qtdProdutos, produto, preco, estoqueMax, custoReposicao, 0);
 					
                     System.out.println("\nProduto Cadastrado com Sucesso!");
                     Thread.sleep(1000);
@@ -243,10 +281,11 @@ public class LojaCoding {
                         listaDeDados = lerProduto(codigo);
 
                         System.out.println("\nCódigo: " + codigo);
-                        System.out.println("Preço: R$ " + listaDeDados[0]);  //preço
-                        System.out.println("Estoque Máximo: " + listaDeDados[1]);  //estoque máximo
-                        System.out.println("Custo de Reposição: R$ " + listaDeDados[2]);  //custo de reposição
-                        System.out.println("Estoque disponível: " + listaDeDados[3]);  //estoque
+                        System.out.println("Nome do produto: " + listaDeDados[0]); //produto
+                        System.out.println("Preço: R$ " + listaDeDados[1]);  //preço
+                        System.out.println("Estoque Máximo: " + listaDeDados[2]);  //estoque máximo
+                        System.out.println("Custo de Reposição: R$ " + listaDeDados[3]);  //custo de reposição
+                        System.out.println("Estoque disponível: " + listaDeDados[4]);  //estoque
                         System.out.println("\nAções: ");
                         System.out.println("A - Anterior ");
                         System.out.println("P - Próximo");
@@ -296,7 +335,7 @@ public class LojaCoding {
                 System.out.print("\nCódigo do produto: ");
                 codigo = input.nextInt();
                 
-                while(codigo < 1 || codigo >= qtdProdutos){
+                while(codigo < 1 || codigo > qtdProdutos){
                     System.out.println("\nInválido!");
                     System.out.println("Código do produto: ");
                     codigo = input.nextInt();
@@ -307,12 +346,13 @@ public class LojaCoding {
                 
                 listaDeDados = lerProduto(codigo);
                 
-                preco = listaDeDados[0];
-                estoqueMax = (int) listaDeDados[1];
-                custoReposicao = listaDeDados[2];
-                qtdEstoque = (int) listaDeDados[3];
+                produto = listaDeDados[0];
+                preco = Float.parseFloat(listaDeDados[1]);
+                estoqueMax = Integer.parseInt(listaDeDados[2]);
+                custoReposicao = Float.parseFloat(listaDeDados[3]);
+                qtdEstoque = Integer.parseInt(listaDeDados[4]);
                 
-                escreverProduto(codigo, preco, estoqueMax, custoReposicao, estoqueMax);
+                escreverProduto(codigo, produto, preco, estoqueMax, custoReposicao, estoqueMax);
                 
                 if(qtdEstoque > 0){
                     System.out.println("\n" + (estoqueMax-qtdEstoque) + "produtos adicionados ao estoque");
@@ -366,6 +406,7 @@ public class LojaCoding {
                     filebuffW.write(Float.toString(custoTotal) + '\n');
                     filebuffW.write(Float.toString(receitaTotal) + '\n');
                     filebuffW.write(Integer.toString(qtdProdutos) + '\n');
+                    filebuffW.write(Integer.toString(qtdVendas) + '\n');
                     
                     filebuffW.close();
                 }
@@ -375,7 +416,7 @@ public class LojaCoding {
                 }
                 break;
             default:
-                System.out.println("Inválido!\n\n");
+                System.out.println("Inválido!\n");
                 Thread.sleep(1000);
                 
                 break;
