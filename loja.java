@@ -51,25 +51,48 @@ public class LojaCoding {
 
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
 
-    public static int[] lerProduto(int codigo) throws IOException{
+    public static float[] lerProduto(int codigo) throws IOException{
         File file = new File("src/Sistema_Comercial/database/produtos/" + codigo);
         FileReader fileReader = new FileReader(file);
         BufferedReader filebuffR = new BufferedReader(fileReader);
         
-        int listaDeValores[] = new int[4];
+        float listaDeValores[] = new float[4];
         
-	    listaDeValores[0] = Integer.parseInt(filebuffR.readLine());    //preço
-	    listaDeValores[1] = Integer.parseInt(filebuffR.readLine());    //estoque máximo
-	    listaDeValores[2] = Integer.parseInt(filebuffR.readLine());    //custo de reposição 
-	    listaDeValores[3] = Integer.parseInt(filebuffR.readLine());    //qtd. de estoque
+	    listaDeValores[0] = Float.parseFloat(filebuffR.readLine());    //preço
+	    listaDeValores[1] = Float.parseFloat(filebuffR.readLine());    //estoque máximo
+	    listaDeValores[2] = Float.parseFloat(filebuffR.readLine());    //custo de reposição 
+	    listaDeValores[3] = Float.parseFloat(filebuffR.readLine());    //qtd. de estoque
         
        return listaDeValores; 
     }
 
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
+    
+    public static void escreverLogVenda(int codigo, float preco,int estoqueMax,float custoReposicao,int estoque) throws Exception{
+    	File file = new File("src/Sistema_Comercial/database/logVenda/" + codigo);
+        FileReader fileReader = new FileReader(file);
+        BufferedReader filebuffR = new BufferedReader(fileReader);
+        
+        //variavel para data e hora
+    	Calendar calendar = Calendar.getInstance();
+    	
+    	int ano, mes, dia, hora, minuto, segundo;
+    	
+		ano = calendar.get(Calendar.YEAR);
+		mes = calendar.get(Calendar.MONTH);
+		dia = calendar.get(Calendar.DAY_OF_MONTH);
+		hora = calendar.get(Calendar.HOUR_OF_DAY);
+		minuto = calendar.get(Calendar.MINUTE);
+		segundo = calendar.get(Calendar.SECOND);
+		
+		
+    	
+    }
+//-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
 
     public static void main(String[] args) throws Exception{
-        Scanner input = new Scanner(System.in);
+    	
+    	Scanner input = new Scanner(System.in);
      
       //abrindo o statusLoja.txt
         File file = new File("src//Sistema_Comercial//statusLoja.txt");
@@ -84,7 +107,7 @@ public class LojaCoding {
         int opcao = 0;       //recebe a opção do menu
         int codigo;          //recebe o código
         char desejo;         //recebe algo para confirmar ('s' ou 'n')
-        int[] listaDeDados;  //recebe o retorno da função (lerProduto)
+        float[] listaDeDados;  //recebe o retorno da função (lerProduto)
         
       //Variáveis para armazenar os dados de um produto
         float preco;      //preço
@@ -136,12 +159,12 @@ public class LojaCoding {
                     listaDeDados = lerProduto(codigo);
                     
                     preco = listaDeDados[0];
-                    estoqueMax = listaDeDados[1];
+                    estoqueMax = (int) listaDeDados[1];
                     custoReposicao = listaDeDados[2];
-                    qtdEstoque = listaDeDados[3];
+                    qtdEstoque = (int) listaDeDados[3];
                     
                     if (qtdEstoque > 0) {
-                    	System.out.print("Quantos produtos deseja comprar: ");
+                    	System.out.print("\nQuantos produtos deseja comprar: ");
                         int qtdVendProdutos = input.nextInt();
 						
                         if ((qtdVendProdutos > 0) && (qtdVendProdutos <= qtdEstoque)) {
@@ -151,8 +174,16 @@ public class LojaCoding {
 							
                             escreverProduto(codigo, preco, estoqueMax, custoReposicao, qtdEstoque);
 							
+                            System.out.println("Quantidade de produtos vendidos: " + qtdVendProdutos);
+                            System.out.println("Preço da compra: " + preco*qtdVendProdutos);
+                            System.out.println("Quantidade no estoque: " + qtdEstoque);
+                            
                             System.out.println("\nCompra efetuada com sucesso!");
+                            
+                            
+                            
                             Thread.sleep(1000);
+                            
                         }
                         else {
                             System.out.println("Quantidade de estoque insuficiente!");
@@ -211,17 +242,18 @@ public class LojaCoding {
                     while (codigo != 0) {                    
                         listaDeDados = lerProduto(codigo);
 
-                        System.out.println("Código: " + codigo);
-                        System.out.println("Preço: " + listaDeDados[0]);  //preço
+                        System.out.println("\nCódigo: " + codigo);
+                        System.out.println("Preço: R$ " + listaDeDados[0]);  //preço
                         System.out.println("Estoque Máximo: " + listaDeDados[1]);  //estoque máximo
-                        System.out.println("Custo de Reposição: " + listaDeDados[2]);  //custo de reposição
-                        System.out.println("Estoque disponível" + listaDeDados[3]);  //estoque
-                    
-                        System.out.println("A - anterior ");
-                        System.out.println("P - próximo");
-                        System.out.println("P - pesquisar por código");
-                        System.out.println("S - sair");
-                    
+                        System.out.println("Custo de Reposição: R$ " + listaDeDados[2]);  //custo de reposição
+                        System.out.println("Estoque disponível: " + listaDeDados[3]);  //estoque
+                        System.out.println("\nAções: ");
+                        System.out.println("A - Anterior ");
+                        System.out.println("P - Próximo");
+                        System.out.println("C - Pesquisar por código");
+                        System.out.println("S - Sair");
+                        
+                        System.out.println("Comando: ");
                         char op = Character.toLowerCase(input.next().charAt(0));
 
                         if(op == 'a' && codigo > 1){
@@ -234,7 +266,7 @@ public class LojaCoding {
                             System.out.print("Código do produto: ");
                             codigo = input.nextInt();
                         
-                            while(codigo < 1 || codigo > qtdProdutos){
+                            while(codigo < 1 || codigo >= qtdProdutos){
                                 System.out.println("Inválido!");
                                 System.out.print("Código do produto: ");
                                 codigo = input.nextInt();
@@ -256,35 +288,40 @@ public class LojaCoding {
                 Thread.sleep(1000);
                 System.out.println("##############  Repor Estoque   #############");
                 
-                System.out.print("Código do produto: ");
+                if (qtdProdutos <= 0) {
+                	System.out.println("\nEstoque de produtos vazio!\n");
+                    Thread.sleep(1000);
+					break;
+				}
+                System.out.print("\nCódigo do produto: ");
                 codigo = input.nextInt();
                 
-                while(codigo < 1 || codigo > qtdProdutos){
-                    System.out.println("Inválido!");
+                while(codigo < 1 || codigo >= qtdProdutos){
+                    System.out.println("\nInválido!");
                     System.out.println("Código do produto: ");
                     codigo = input.nextInt();
                 }
                 
-                System.out.println("Repondo o estoque...");
+                System.out.println("\nRepondo o estoque...");
                 Thread.sleep(1000);
                 
                 listaDeDados = lerProduto(codigo);
                 
                 preco = listaDeDados[0];
-                estoqueMax = listaDeDados[1];
+                estoqueMax = (int) listaDeDados[1];
                 custoReposicao = listaDeDados[2];
-                qtdEstoque = listaDeDados[3];
+                qtdEstoque = (int) listaDeDados[3];
                 
                 escreverProduto(codigo, preco, estoqueMax, custoReposicao, estoqueMax);
                 
                 if(qtdEstoque > 0){
-                    System.out.println((estoqueMax-qtdEstoque) + "produtos adicionados ao estoque");
+                    System.out.println("\n" + (estoqueMax-qtdEstoque) + "produtos adicionados ao estoque");
                     Thread.sleep(1000);
                 }else {
-                    System.out.println("Estoque máximo reposto!");
+                    System.out.println("\nEstoque máximo reposto!");
                     Thread.sleep(1000);
-                }                	opcao = 0;
-                
+                }
+                break;
             case 5:
                 System.out.println("Aguarde...");
                 Thread.sleep(1000);
@@ -307,9 +344,7 @@ public class LojaCoding {
                 System.out.println("Custo Total: " + custoTotal);
                 System.out.println("Receita Total: " + receitaTotal);
                 System.out.println("Quantidade de Produtos: " + qtdProdutos);
-                
-                System.out.println("'Enter' para continuar...");
-                input.nextLine();
+                Thread.sleep(4000);
                 
                 break;
             case 8: 
