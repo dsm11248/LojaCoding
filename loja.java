@@ -22,17 +22,28 @@ import java.io.*;
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
 
 public class LojaCoding {
-
+//-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
+	
+	public static char desejoErro(char desejo){
+		Scanner input = new Scanner(System.in);
+		
+		while(desejo != 's' && desejo != 'n'){
+            System.out.print("Inválido!\n(S - sim) ou (N - não): ");
+            desejo = Character.toLowerCase(input.next().charAt(0));
+        }
+		return desejo;
+	}
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
 
-    public static void escreverProduto(int codigo, float preco,int estoqueMax,float custoRepo,int estoque) throws Exception{
-        File file = new File("src//Sistema_Comecial//database//produtos" + String.valueOf(codigo));
+    public static void escreverProduto(int codigo, float preco,int estoqueMax,float custoReposicao,int estoque) throws Exception{
+        File file = new File("src/Sistema_Comercial/database/produtos/" + codigo);
+        file.createNewFile();
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter filebuffW = new BufferedWriter(fileWriter);
         
 	    filebuffW.write( String.valueOf(preco) + '\n');
 	    filebuffW.write( String.valueOf(estoqueMax) + '\n');
-	    filebuffW.write( String.valueOf(custoRepo) + '\n');
+	    filebuffW.write( String.valueOf(custoReposicao) + '\n');
 	    filebuffW.write( String.valueOf(estoque) + '\n');
 	
 	    filebuffW.close();
@@ -41,7 +52,7 @@ public class LojaCoding {
 //-------------##------------------##-----------------##--------------------##-----------------##---------------------##-----------------
 
     public static int[] lerProduto(int codigo) throws IOException{
-        File file = new File("src//Sistema_Comecial//database//produtos" + String.valueOf(codigo));
+        File file = new File("src/Sistema_Comercial/database/produtos/" + codigo);
         FileReader fileReader = new FileReader(file);
         BufferedReader filebuffR = new BufferedReader(fileReader);
         
@@ -78,7 +89,7 @@ public class LojaCoding {
       //Variáveis para armazenar os dados de um produto
         float preco;      //preço
         int estoqueMax;   //estoque máximo
-        float custoRepo;  //custo de reposição
+        float custoReposicao;  //custo de reposição
         int qtdEstoque;   //quantidade no estoque
                     
       //Abrindo o arquivo 'statusLoja.txt' para ler
@@ -94,19 +105,20 @@ public class LojaCoding {
         fileReader.close();
         
         System.out.println("##################################");
-        System.out.println("######   Sistema Comercial  ######");
+        System.out.println("#########  Loja Coding  ##########");
         System.out.println("##################################");
 	
-        while(opcao != 7)
+        while(opcao != 8)
         {
             System.out.println("\nMenu");
             System.out.println("1. Vender um Produto");
             System.out.println("2. Cadastrar um Produto");
             System.out.println("3. Consultar Banco de Dados");
-            System.out.println("4. Verificar Relatório de Vendas");
-            System.out.println("5. Verificar Relatório de Reposição");
-            System.out.println("6. Status da Loja");
-            System.out.println("7. Sair");
+            System.out.println("4. Repor Estoque");
+            System.out.println("5. Verificar Relatório de Vendas");
+            System.out.println("6. Verificar Relatório de Reposição");
+            System.out.println("7. Status da Loja");
+            System.out.println("8. Sair");
 	
             System.out.print("\nComando: ");
             opcao = input.nextInt();
@@ -120,12 +132,12 @@ public class LojaCoding {
                 System.out.print("\nCódigo: ");
                 codigo = input.nextInt();
                 
-                if(codigo > 0 && codigo < qtdProdutos){
+                if(codigo > 0 && codigo <= qtdProdutos){
                     listaDeDados = lerProduto(codigo);
                     
                     preco = listaDeDados[0];
                     estoqueMax = listaDeDados[1];
-                    custoRepo = listaDeDados[2];
+                    custoReposicao = listaDeDados[2];
                     qtdEstoque = listaDeDados[3];
                     
                     if (qtdEstoque > 0) {
@@ -137,7 +149,7 @@ public class LojaCoding {
                             receitaTotal += preco * qtdVendProdutos;
                             qtdEstoque -= 1;
 							
-                            escreverProduto(codigo, preco, estoqueMax, custoRepo, qtdEstoque);
+                            escreverProduto(codigo, preco, estoqueMax, custoReposicao, qtdEstoque);
 							
                             System.out.println("\nCompra efetuada com sucesso!");
                             Thread.sleep(1000);
@@ -163,7 +175,7 @@ public class LojaCoding {
                 Thread.sleep(1000);
                 System.out.println("\n##############  Cadastro de Produto  ##############");
                 
-                System.out.println("\nCódigo: " + qtdProdutos+1);
+                System.out.println("\nCódigo: " + (qtdProdutos+1));
                 
                 System.out.print("Preço Unitário: R$ ");
                 preco = input.nextFloat();
@@ -172,23 +184,19 @@ public class LojaCoding {
                 estoqueMax = input.nextInt();
                 
                 System.out.print("Custo de reposição: R$ ");
-                custoRepo = input.nextFloat();
+                custoReposicao = input.nextFloat();
                 
-                System.out.print("\nConfirmar cadastro de produto: ");
+                System.out.print("\nConfirmar cadastro de produto?\n(S - sim) ou (N - não):");
                
-                desejo = input.nextLine().toLowerCase().charAt(0);
-                
-                while(desejo != 's' && desejo != 'n'){
-                    Thread.sleep(1000);
-                    System.out.print("Inválido!\n(S - sim) ou (N - não): ");
-                    desejo = input.nextLine().toLowerCase().charAt(0);
-                }
+                desejo = Character.toLowerCase(input.next().charAt(0));
+                desejo = desejoErro(desejo);
                 
                 if (desejo == 's') {
                     qtdProdutos += 1;
-                    escreverProduto(qtdProdutos, preco, estoqueMax, custoRepo, 0);
+                    //int codigo, float preco,int estoqueMax,float custoReposicao,int estoque
+                    escreverProduto(qtdProdutos, preco, estoqueMax, custoReposicao, 0);
 					
-                    System.out.println("Produto Cadastrado com Sucesso!");
+                    System.out.println("\nProduto Cadastrado com Sucesso!");
                     Thread.sleep(1000);
                 }
                 
@@ -264,10 +272,10 @@ public class LojaCoding {
                 
                 preco = listaDeDados[0];
                 estoqueMax = listaDeDados[1];
-                custoRepo = listaDeDados[2];
+                custoReposicao = listaDeDados[2];
                 qtdEstoque = listaDeDados[3];
                 
-                escreverProduto(codigo, preco, estoqueMax, custoRepo, estoqueMax);
+                escreverProduto(codigo, preco, estoqueMax, custoReposicao, estoqueMax);
                 
                 if(qtdEstoque > 0){
                     System.out.println((estoqueMax-qtdEstoque) + "produtos adicionados ao estoque");
@@ -275,7 +283,7 @@ public class LojaCoding {
                 }else {
                     System.out.println("Estoque máximo reposto!");
                     Thread.sleep(1000);
-                }
+                }                	opcao = 0;
                 
             case 5:
                 System.out.println("Aguarde...");
@@ -305,15 +313,13 @@ public class LojaCoding {
                 
                 break;
             case 8: 
-            	System.out.print("Você tem certeza que deseja sair?\n(S - sim) ou (N - não): ");
-                desejo = input.nextLine().toLowerCase().charAt(0);
+            	System.out.print("\nVocê tem certeza que deseja sair?\n(S - sim) ou (N - não): ");
                 
-                while(desejo != 's' && desejo != 'n'){
-                    System.out.print("Opção Inválida!\n(S - sim) ou (N - não): ");
-                    desejo = input.nextLine().toLowerCase().charAt(0);
-                }
+            	desejo = Character.toLowerCase(input.next().charAt(0));
+                desejo = desejoErro(desejo);
+                
                 if(desejo == 's'){
-                    System.out.println("Saindo do Sistema...");
+                    System.out.println("\nSaindo do Sistema...");
                     System.out.println("Atualizando o status da loja...");
                     Thread.sleep(1000);
                     
@@ -343,4 +349,3 @@ public class LojaCoding {
         } //End of While
     } //End of Main
 } //End of Class
-
